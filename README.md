@@ -40,7 +40,7 @@ add interface=containers list=LAN
 /container mounts
 add dst=/etc/amnezia name=awg-conf src=/awg-conf comment="AmneziaWG etc"
 
-/container/add hostname=awg interface=veth1 logging=yes mounts=awg_config file=usb1-part1/docker-awg-arm7.tar root-dir=usb1-part1/awg
+/container/add hostname=awg interface=veth1 logging=yes mounts=awg_config file=usb1-part1/amneziawg-mikrotik.tar root-dir=usb1-part1/awg
 ```
 
 4. Start Container
@@ -71,6 +71,14 @@ You can login into container as shown above and can edit config as
 
 ```shell
 awg:/# vi /etc/amnezia/amneziawg/awg0.conf
+```
+
+### Warning
+
+While customizing your config, pay attention to the following line:
+
+```
+AllowedIPs = don't use just 0.0.0.0/0, include Interface.Address IP range, exclude local networks(10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16), exclude Endpoint address -> https://www.procustodibus.com/blog/2021/03/wireguard-allowedips-calculator/
 ```
 
 to apply new configuration you can run following command (as usual for awg):
