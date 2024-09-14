@@ -1,4 +1,4 @@
-# How to setup AmneziaWG on Microtik router
+# How to setup AmneziaWG on Mikrotik router
 
 ## Prepare image
 
@@ -13,14 +13,16 @@ $ docker compose build
 
 $ docker save amneziawg-mikrotik:latest > amneziawg-mikrotik.tar
 
-$ scp amneziawg-mikrotik.tar mikrotik:
+$ scp amneziawg-mikrotik.tar mikrotik:/usb1-part1/
 ```
 
 ## Configure Mikrotik router
 
 1. Setup Containers on mikrotik accoring to [Mikrotik Container](https://help.mikrotik.com/docs/display/ROS/Container)
 
-2. Configure AWG container
+2. (Optional) Setup flash drive using `System -> Disks` menu and format it into ext4
+
+3. Configure AWG container
 
 ```shell
 /interface veth
@@ -38,11 +40,10 @@ add interface=containers list=LAN
 /container mounts
 add dst=/etc/amnezia name=awg-conf src=/awg-conf comment="AmneziaWG etc"
 
-/container
-add file=amneziawg-mikrotik.tar hostname=awg interface=veth1 mounts=awg-conf root-dir=/awg
+/container/add hostname=awg interface=veth1 logging=yes mounts=awg_config file=usb1-part1/docker-awg-arm7.tar root-dir=usb1-part1/awg
 ```
 
-3. Start Container
+4. Start Container
 
 ```shell
 /container start 0
